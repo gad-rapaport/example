@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מגה פיקסל | שירותי הדפסה ופיתוח תמונות בבני ברק</title>
-    <meta name="description" content="מגה פיקסל - חנות הדפסות מקצועית בבני ברק. פרימיום של שירות ואיכות.">
     
     <link rel="icon" href="logo.webp" type="image/webp">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,27 +16,42 @@
         #splash-screen { position: fixed; inset: 0; z-index: 9999; background-color: #000; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out; }
         .hide-splash { opacity: 0; visibility: hidden; }
 
-        /* --- כתמי צבע רקע --- */
         .splash-background {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none;
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(236, 72, 153, 0.4) 0%, transparent 20%),
                 radial-gradient(circle at 90% 40%, rgba(59, 130, 246, 0.4) 0%, transparent 25%),
-                radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.3) 0%, transparent 20%),
-                radial-gradient(circle at 80% 90%, rgba(245, 158, 11, 0.3) 0%, transparent 15%);
+                radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.3) 0%, transparent 20%);
             filter: blur(40px);
         }
 
-        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        /* --- מנוע אנימציות "פאוורפוינט" בגלילה --- */
+        .ppt-anim {
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        
+        /* סוגי האנימציות */
+        .ppt-fade-up { transform: translateY(60px); }
+        .ppt-slide-right { transform: translateX(80px); }
+        .ppt-slide-left { transform: translateX(-80px); }
+        .ppt-zoom-in { transform: scale(0.8); }
+
+        /* כשהאלמנט נכנס למסך */
+        .ppt-anim.visible {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
+
+        /* דיליי (השהיה) כדי שהכרטיסיות יקפצו אחת אחרי השנייה כמו במצגת */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
 
         .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.6); }
         
-        .upload-zone { 
-            border: 4px dashed #93c5fd; transition: all 0.4s ease; z-index: 10; position: relative;
-            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)) padding-box, linear-gradient(45deg, #3b82f6, #ec4899) border-box;
-            border: 4px solid transparent;
-        }
+        .upload-zone { border: 4px dashed #93c5fd; transition: all 0.4s ease; z-index: 10; position: relative; background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)) padding-box, linear-gradient(45deg, #3b82f6, #ec4899) border-box; border: 4px solid transparent; }
         .upload-zone:hover { background: rgba(255, 255, 255, 1); transform: scale(1.03); box-shadow: 0 25px 50px -10px rgba(236, 72, 153, 0.3); }
         
         .service-card { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; position: relative; overflow: visible; }
@@ -46,9 +60,6 @@
         .image-zoom-container img { transition: transform 1.2s ease; width: 100%; height: 100%; object-fit: cover; }
         .service-card:hover .image-zoom-container img { transform: scale(1.1); }
         
-        .cta-btn { transition: all 0.3s ease; }
-        .cta-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 30px -5px rgba(236, 72, 153, 0.4); }
-        
         .icon-bubble { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: -40px auto 20px auto; box-shadow: 0 15px 35px rgba(0,0,0,0.15); position: relative; z-index: 2; background: white; font-size: 2.8rem; color: #1f2937; transition: all 0.3s ease; }
         .service-card:hover .icon-bubble i { animation: bounce 0.6s ease; color: #ec4899; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -56,44 +67,12 @@
         .animated-gradient-text { background: linear-gradient(to right, #facc15, #ec4899, #3b82f6, #facc15); background-size: 200% auto; color: transparent; -webkit-background-clip: text; animation: textGradient 3s linear infinite; }
         @keyframes textGradient { to { background-position: 200% center; } }
 
-        /* --- קטלוג הדמיות (Live Preview) --- */
-        .mockup-room {
-            width: 100%; height: 500px; border-radius: 2rem;
-            background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80'); /* רקע סלון יוקרתי */
-            background-size: cover; background-position: center;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: inset 0 0 100px rgba(0,0,0,0.2);
-            position: relative;
-        }
-        
-        /* עיצוב הקאנבס שמונח בסלון */
-        .mockup-item {
-            background-color: #e5e7eb; /* צבע ברירת מחדל עד שמעלים תמונה */
-            background-size: cover; background-position: center;
-            transition: all 0.5s ease;
-            position: relative;
-            display: flex; align-items: center; justify-content: center;
-        }
-        
-        /* מצב קאנבס */
-        .style-canvas {
-            width: 250px; height: 350px;
-            box-shadow: 15px 15px 30px rgba(0,0,0,0.4), -5px -5px 15px rgba(255,255,255,0.1);
-            border-right: 5px solid #d1d5db; /* אפקט עובי של קאנבס */
-            border-bottom: 5px solid #9ca3af;
-        }
-        
-        /* מצב בלוק עץ */
-        .style-block {
-            width: 200px; height: 200px;
-            box-shadow: 20px 20px 40px rgba(0,0,0,0.5);
-            border: 8px solid #8b5cf6; /* מסגרת צבעונית/עץ */
-            border-radius: 10px;
-        }
-
-        .placeholder-text {
-            color: #6b7280; font-weight: 900; font-size: 1.5rem; text-shadow: 1px 1px 0 rgba(255,255,255,0.5); text-align: center;
-        }
+        /* קטלוג לייב */
+        .mockup-room { width: 100%; height: 500px; border-radius: 2rem; background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 100px rgba(0,0,0,0.2); position: relative; }
+        .mockup-item { background-color: #e5e7eb; background-size: cover; background-position: center; transition: all 0.5s ease; position: relative; display: flex; align-items: center; justify-content: center; }
+        .style-canvas { width: 250px; height: 350px; box-shadow: 15px 15px 30px rgba(0,0,0,0.4), -5px -5px 15px rgba(255,255,255,0.1); border-right: 5px solid #d1d5db; border-bottom: 5px solid #9ca3af; }
+        .style-block { width: 200px; height: 200px; box-shadow: 20px 20px 40px rgba(0,0,0,0.5); border: 8px solid #8b5cf6; border-radius: 10px; }
+        .placeholder-text { color: #6b7280; font-weight: 900; font-size: 1.5rem; text-shadow: 1px 1px 0 rgba(255,255,255,0.5); text-align: center; }
         
         html { scroll-behavior: smooth; }
     </style>
@@ -117,7 +96,7 @@
             </a>
             <div class="flex items-center gap-6">
                 <a href="tel:039102121" class="hidden md:flex items-center gap-2 text-gray-800 hover:text-blue-600 font-black transition text-xl">Let's Talk 📞</a>
-                <a href="#upload-section" class="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-full font-bold shadow-lg transition cta-btn">הדפס עכשיו</a>
+                <a href="#upload-section" class="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-full font-bold shadow-lg transition">הדפס עכשיו</a>
             </div>
         </div>
     </header>
@@ -126,23 +105,24 @@
         <div class="absolute inset-0 z-0 opacity-60">
             <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1920&q=80" alt="רקע צבעים מתנפצים" class="w-full h-full object-cover">
         </div>
-        <div class="container mx-auto px-4 text-center relative z-10 fade-up">
+        <div class="container mx-auto px-4 text-center relative z-10 ppt-anim ppt-fade-up">
             <h1 class="text-6xl md:text-9xl font-black mb-6 tracking-tight drop-shadow-2xl text-white">
                 חיים <span class="animated-gradient-text">בצבע.</span>
             </h1>
             <p class="text-2xl md:text-3xl mb-12 font-medium opacity-95 max-w-3xl mx-auto drop-shadow-lg leading-relaxed text-gray-100">
                 הדפסות איכות שיגרמו לכם לרצות לגעת בתמונה. <br/> שולחים מהנייד, אוספים מוכן בבני ברק.
             </p>
-            <a href="#live-catalog" class="inline-block bg-white text-gray-900 font-black text-xl py-5 px-14 rounded-full shadow-[0_20px_50px_rgba(255,255,255,0.3)] hover:scale-105 transition duration-300 cta-btn">
+            <a href="#live-catalog" class="inline-block bg-white text-gray-900 font-black text-xl py-5 px-14 rounded-full shadow-[0_20px_50px_rgba(255,255,255,0.3)] hover:scale-105 transition duration-300">
                 ← נסו את הקטלוג החי
             </a>
         </div>
     </section>
 
     <section class="py-28 container mx-auto px-4 relative max-w-7xl">
-        <h2 class="text-6xl font-black text-center mb-28 text-gray-900 relative z-10 fade-up">מה תרצו להדפיס?</h2>
+        <h2 class="text-6xl font-black text-center mb-28 text-gray-900 relative z-10 ppt-anim ppt-fade-up">מה תרצו להדפיס?</h2>
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24">
-            <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col fade-up">
+            <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col ppt-anim ppt-fade-up delay-100">
                 <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1516805315-b7783bb17f8a?auto=format&fit=crop&w=800&q=80" alt="פיתוח תמונות איכות"></div>
                 <div class="icon-bubble"><i class='bx bxs-camera'></i></div>
                 <div class="p-10 pt-2 text-center flex-grow">
@@ -150,7 +130,8 @@
                     <p class="text-gray-600 font-medium text-xl leading-relaxed">איכות מעבדה מדויקת שתשמור על הזיכרונות שלכם חדים לנצח.</p>
                 </div>
             </div>
-            <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col fade-up">
+            
+            <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col ppt-anim ppt-fade-up delay-200">
                 <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80" alt="קאנבס ואמנות"></div>
                 <div class="icon-bubble"><i class='bx bxs-palette'></i></div>
                 <div class="p-10 pt-2 text-center flex-grow">
@@ -158,18 +139,36 @@
                     <p class="text-gray-600 font-medium text-xl leading-relaxed">הדפסות ענק על קאנבס מתוח עם מסגרות עץ ברמת גימור גלריה.</p>
                 </div>
             </div>
+            
+            <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col ppt-anim ppt-fade-up delay-300">
+                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80" alt="מיתוג עסקי"></div>
+                <div class="icon-bubble"><i class='bx bxs-id-card'></i></div>
+                <div class="p-10 pt-2 text-center flex-grow">
+                    <h3 class="font-black text-3xl mb-4 text-gray-900">כרטיסי ביקור</h3>
+                    <p class="text-gray-600 font-medium text-xl leading-relaxed">מיתוג עסקי שבולט בשטח. כרטיסים, מדבקות ומוצרי קד"מ מנצחים.</p>
+                </div>
+            </div>
+            
+            <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col ppt-anim ppt-fade-up delay-400">
+                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80" alt="משרד והדפסות"></div>
+                <div class="icon-bubble"><i class='bx bxs-file-doc'></i></div>
+                <div class="p-10 pt-2 text-center flex-grow">
+                    <h3 class="font-black text-3xl mb-4 text-gray-900">מסמכים וצילום</h3>
+                    <p class="text-gray-600 font-medium text-xl leading-relaxed">הדפסת לייזר חדה ומהירה. כריכות, סריקות ושירותי משרד מתקדמים.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section id="live-catalog" class="py-28 bg-white/60 border-t border-white/50 relative">
-        <div class="container mx-auto px-4 max-w-6xl fade-up">
-            <div class="text-center mb-16">
+    <section id="live-catalog" class="py-28 bg-white/60 border-t border-white/50 relative overflow-hidden">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="text-center mb-16 ppt-anim ppt-fade-up">
                 <h2 class="text-5xl font-black mb-4 text-gray-900">קטלוג חכם <span class="text-pink-500">לייב</span></h2>
                 <p class="text-2xl text-gray-600 font-medium">העלו תמונה וראו בדיוק איך המוצר ייראה אצלכם בסלון לפני שמדפיסים.</p>
             </div>
 
             <div class="flex flex-col lg:flex-row gap-12 items-center">
-                <div class="w-full lg:w-1/3 glass-panel p-8 rounded-[2rem] shadow-xl">
+                <div class="w-full lg:w-1/3 glass-panel p-8 rounded-[2rem] shadow-xl ppt-anim ppt-slide-right delay-100">
                     <h3 class="text-2xl font-black mb-6 text-gray-800">1. בחרו סגנון הדפסה:</h3>
                     <div class="flex gap-4 mb-8">
                         <button onclick="changeMockupStyle('style-canvas')" class="flex-1 bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-gray-800 transition shadow-md">קאנבס</button>
@@ -181,10 +180,9 @@
                         <i class='bx bx-image-add text-3xl'></i> בחרו תמונה להדמיה
                     </button>
                     <input type="file" id="mockup-upload" class="hidden" accept="image/*">
-                    <p class="text-center text-gray-500 mt-4 font-bold text-sm">* התמונה נשארת אצלכם במכשיר ולא נשלחת לשרת בשלב זה.</p>
                 </div>
 
-                <div class="w-full lg:w-2/3">
+                <div class="w-full lg:w-2/3 ppt-anim ppt-slide-left delay-200">
                     <div class="mockup-room">
                         <div id="mockup-display" class="mockup-item style-canvas">
                             <span id="mockup-placeholder" class="placeholder-text">התמונה שלכם כאן</span>
@@ -196,7 +194,7 @@
     </section>
 
     <section id="upload-section" class="relative py-28 border-t border-white/30 bg-white/40">
-        <div class="container mx-auto px-4 max-w-4xl text-center relative z-10 fade-up">
+        <div class="container mx-auto px-4 max-w-4xl text-center relative z-10 ppt-anim ppt-zoom-in">
             <h2 class="text-5xl font-black mb-6 text-gray-900">אהבתם? שולחים קובץ ובאים לאסוף</h2>
             <p class="text-gray-600 mb-12 text-2xl font-medium">המערכת המאובטחת שלנו משגרת את הקבצים ישירות למכונות הדפוס.</p>
             
@@ -212,10 +210,10 @@
         </div>
     </section>
 
-    <section class="py-24 bg-white/60 border-t border-white/30">
-        <div class="container mx-auto px-4 max-w-6xl fade-up">
-            <h2 class="text-4xl font-black text-center mb-12 text-gray-900">החנות שלנו</h2>
-            <div class="flex flex-col lg:flex-row gap-0 bg-white rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100">
+    <section class="py-24 bg-white/60 border-t border-white/30 overflow-hidden">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <h2 class="text-4xl font-black text-center mb-12 text-gray-900 ppt-anim ppt-fade-up">החנות שלנו</h2>
+            <div class="flex flex-col lg:flex-row gap-0 bg-white rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100 ppt-anim ppt-slide-right">
                 <div class="p-16 lg:w-1/3 flex flex-col justify-center bg-gray-900 text-white">
                     <h3 class="text-4xl font-black text-white mb-8">מגה פיקסל</h3>
                     <p class="flex items-center gap-4 text-gray-300 mb-6 text-2xl font-bold"><span class="bg-gray-800 p-3 rounded-xl text-white"><i class='bx bxs-map'></i></span> רבי עקיבא 52 ב', בני ברק</p>
@@ -226,7 +224,7 @@
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-white py-14">
+    <footer class="bg-gray-900 text-white py-14 ppt-anim ppt-fade-up">
         <div class="container mx-auto px-4 text-center">
             <p class="text-gray-400 font-bold text-lg mb-2">© 2026 כל הזכויות שמורות למגה פיקסל</p>
             <p class="text-gray-500 font-medium">נבנה ועוצב בפרימיום על ידי <a href="https://wa.me/972559297328" target="_blank" class="animated-gradient-text font-black hover:opacity-80 transition ml-1">הצעד הבא שלך</a></p>
@@ -238,16 +236,28 @@
     </a>
 
     <script>
+        // ניהול מסך פתיחה
         document.addEventListener("DOMContentLoaded", function() {
             const splashScreen = document.getElementById('splash-screen');
             setTimeout(() => { splashScreen.classList.add('hide-splash'); setTimeout(() => splashScreen.remove(), 800); }, 3000);
         });
 
+        // --- מנוע האנימציות שלנו (Intersection Observer) ---
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('show', 'visible'); } }); }, observerOptions);
-        document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+        const observer = new IntersectionObserver((entries) => { 
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) { 
+                    entry.target.classList.add('visible'); 
+                    // אפשר להסיר את השורה הבאה אם רוצים שהאנימציה תקרה כל פעם שגוללים למעלה ולמטה
+                    observer.unobserve(entry.target); 
+                } 
+            }); 
+        }, observerOptions);
+        
+        // מפעיל את המעקב על כל אלמנט עם הקלאס ppt-anim
+        document.querySelectorAll('.ppt-anim').forEach((el) => observer.observe(el));
 
-        // --- לוגיקת הקטלוג החי (Mockup Editor) ---
+        // --- קטלוג חי ---
         const mockupInput = document.getElementById('mockup-upload');
         const mockupDisplay = document.getElementById('mockup-display');
         const mockupPlaceholder = document.getElementById('mockup-placeholder');
@@ -262,13 +272,13 @@
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     mockupDisplay.style.backgroundImage = `url(${event.target.result})`;
-                    mockupPlaceholder.style.display = 'none'; // מסתיר את הטקסט ברגע שיש תמונה
+                    mockupPlaceholder.style.display = 'none';
                 }
                 reader.readAsDataURL(file);
             }
         });
 
-        // --- לוגיקת העלאה סופית לוואטסאפ ---
+        // --- העלאה סופית ---
         const fileInput = document.getElementById('file-upload'); 
         const filePreview = document.getElementById('file-preview'); 
         const submitBtn = document.getElementById('submit-btn');
@@ -279,26 +289,4 @@
                 filePreview.classList.remove('hidden'); 
                 submitBtn.classList.remove('bg-gray-300', 'text-gray-600', 'cursor-not-allowed'); 
                 submitBtn.classList.add('bg-gray-900', 'text-white', 'hover:bg-black', 'hover:-translate-y-1', 'shadow-2xl'); 
-                submitBtn.innerHTML = 'שלח להדפסה בוואטסאפ <i class="bx bxl-whatsapp ml-2"></i>'; 
-                submitBtn.removeAttribute('disabled'); 
-            } 
-        });
-
-        submitBtn.addEventListener('click', function() {
-            if(!this.disabled && fileInput.files.length > 0) {
-                const fileName = fileInput.files[0].name;
-                const message = encodeURIComponent(`היי מגה פיקסל! 👋\nאני רוצה להדפיס את הקובץ: *${fileName}*\nאני מצרף אותו כאן למטה 👇`);
-                const waLink = `https://wa.me/97239102121?text=${message}`;
-
-                this.innerHTML = 'פותח וואטסאפ... ⏳';
-
-                setTimeout(() => {
-                    alert("מעולה! חלון הוואטסאפ ייפתח כעת.\nשימו לב: מטעמי אבטחה, יש לצרף את הקובץ ידנית בתוך השיחה.");
-                    window.open(waLink, '_blank');
-                    this.innerHTML = 'שלח קבצים להדפסה <i class="bx bxl-whatsapp ml-2"></i>';
-                }, 800);
-            }
-        });
-    </script>
-</body>
-</html>
+                submitBtn.innerHTML = 'שלח להדפסה בוואטסאפ <i class=
