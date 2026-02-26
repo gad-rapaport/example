@@ -13,8 +13,8 @@
     <style>
         body { font-family: 'Heebo', sans-serif; overflow-x: hidden; background-color: #f8fafc; }
         
-        #splash-screen { position: fixed; inset: 0; z-index: 9999; background-color: #000; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out; }
-        .hide-splash { opacity: 0; visibility: hidden; }
+        #splash-screen { position: fixed; inset: 0; z-index: 9999; background-color: #050505; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out; }
+        .hide-splash { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .splash-background {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none;
@@ -25,25 +25,13 @@
             filter: blur(40px);
         }
 
-        /* --- מנוע אנימציות "פאוורפוינט" בגלילה --- */
-        .ppt-anim {
-            opacity: 0;
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        
-        /* סוגי האנימציות */
+        .ppt-anim { opacity: 0; transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
         .ppt-fade-up { transform: translateY(60px); }
         .ppt-slide-right { transform: translateX(80px); }
         .ppt-slide-left { transform: translateX(-80px); }
         .ppt-zoom-in { transform: scale(0.8); }
+        .ppt-anim.visible { opacity: 1; transform: translate(0) scale(1); }
 
-        /* כשהאלמנט נכנס למסך */
-        .ppt-anim.visible {
-            opacity: 1;
-            transform: translate(0) scale(1);
-        }
-
-        /* דיליי (השהיה) כדי שהכרטיסיות יקפצו אחת אחרי השנייה כמו במצגת */
         .delay-100 { transition-delay: 0.1s; }
         .delay-200 { transition-delay: 0.2s; }
         .delay-300 { transition-delay: 0.3s; }
@@ -67,7 +55,6 @@
         .animated-gradient-text { background: linear-gradient(to right, #facc15, #ec4899, #3b82f6, #facc15); background-size: 200% auto; color: transparent; -webkit-background-clip: text; animation: textGradient 3s linear infinite; }
         @keyframes textGradient { to { background-position: 200% center; } }
 
-        /* קטלוג לייב */
         .mockup-room { width: 100%; height: 500px; border-radius: 2rem; background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 100px rgba(0,0,0,0.2); position: relative; }
         .mockup-item { background-color: #e5e7eb; background-size: cover; background-position: center; transition: all 0.5s ease; position: relative; display: flex; align-items: center; justify-content: center; }
         .style-canvas { width: 250px; height: 350px; box-shadow: 15px 15px 30px rgba(0,0,0,0.4), -5px -5px 15px rgba(255,255,255,0.1); border-right: 5px solid #d1d5db; border-bottom: 5px solid #9ca3af; }
@@ -82,7 +69,7 @@
     <div class="splash-background"></div>
 
     <div id="splash-screen">
-        <video id="intro-video" src="opening.mp4" autoplay muted playsinline class="w-full h-full object-cover"></video>
+        <video id="intro-video" src="opening.mp4" autoplay muted playsinline preload="auto" class="w-full h-full object-cover"></video>
     </div>
 
     <header class="glass-panel sticky top-0 z-50 shadow-sm border-b border-white/50">
@@ -123,7 +110,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24">
             <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col ppt-anim ppt-fade-up delay-100">
-                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1516805315-b7783bb17f8a?auto=format&fit=crop&w=800&q=80" alt="פיתוח תמונות איכות"></div>
+                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1516805315-b7783bb17f8a?auto=format&fit=crop&w=800&q=80" alt="פיתוח תמונות איכות" loading="lazy"></div>
                 <div class="icon-bubble"><i class='bx bxs-camera'></i></div>
                 <div class="p-10 pt-2 text-center flex-grow">
                     <h3 class="font-black text-3xl mb-4 text-gray-900">פיתוח תמונות</h3>
@@ -132,7 +119,7 @@
             </div>
             
             <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col ppt-anim ppt-fade-up delay-200">
-                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80" alt="קאנבס ואמנות"></div>
+                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80" alt="קאנבס ואמנות" loading="lazy"></div>
                 <div class="icon-bubble"><i class='bx bxs-palette'></i></div>
                 <div class="p-10 pt-2 text-center flex-grow">
                     <h3 class="font-black text-3xl mb-4 text-gray-900">קאנבס ומתנות</h3>
@@ -141,7 +128,7 @@
             </div>
             
             <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col ppt-anim ppt-fade-up delay-300">
-                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80" alt="מיתוג עסקי"></div>
+                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80" alt="מיתוג עסקי" loading="lazy"></div>
                 <div class="icon-bubble"><i class='bx bxs-id-card'></i></div>
                 <div class="p-10 pt-2 text-center flex-grow">
                     <h3 class="font-black text-3xl mb-4 text-gray-900">כרטיסי ביקור</h3>
@@ -150,7 +137,7 @@
             </div>
             
             <div class="glass-panel rounded-[2rem] shadow-xl service-card flex flex-col ppt-anim ppt-fade-up delay-400">
-                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80" alt="משרד והדפסות"></div>
+                <div class="image-zoom-container"><img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80" alt="משרד והדפסות" loading="lazy"></div>
                 <div class="icon-bubble"><i class='bx bxs-file-doc'></i></div>
                 <div class="p-10 pt-2 text-center flex-grow">
                     <h3 class="font-black text-3xl mb-4 text-gray-900">מסמכים וצילום</h3>
@@ -236,35 +223,49 @@
     </a>
 
     <script>
-        // ניהול מסך פתיחה
+        // --- מנגנון הגנה נגד תקיעות וידאו ---
         document.addEventListener("DOMContentLoaded", function() {
             const splashScreen = document.getElementById('splash-screen');
-            setTimeout(() => { splashScreen.classList.add('hide-splash'); setTimeout(() => splashScreen.remove(), 800); }, 3000);
+            const video = document.getElementById('intro-video');
+            
+            // פונקציה שמסירה את המסך לחלוטין
+            const removeSplash = () => {
+                if(!splashScreen.classList.contains('hide-splash')) {
+                    splashScreen.classList.add('hide-splash'); 
+                    setTimeout(() => splashScreen.remove(), 600);
+                }
+            };
+
+            // גם אם הסרטון כבד ונתקע, אחרי 3 שניות גג זה נעלם
+            setTimeout(removeSplash, 3000);
+
+            // ניסיון להריץ בכוח כדי למנוע חסימת דפדפן
+            if(video) {
+                video.play().catch(error => {
+                    console.log("Video autoplay prevented or failed.");
+                    removeSplash(); // אם נכשל, מסיר מיד
+                });
+            }
         });
 
-        // --- מנוע האנימציות שלנו (Intersection Observer) ---
+        // אנימציות גלילה
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const observer = new IntersectionObserver((entries) => { 
             entries.forEach(entry => { 
                 if (entry.isIntersecting) { 
                     entry.target.classList.add('visible'); 
-                    // אפשר להסיר את השורה הבאה אם רוצים שהאנימציה תקרה כל פעם שגוללים למעלה ולמטה
                     observer.unobserve(entry.target); 
                 } 
             }); 
         }, observerOptions);
-        
-        // מפעיל את המעקב על כל אלמנט עם הקלאס ppt-anim
         document.querySelectorAll('.ppt-anim').forEach((el) => observer.observe(el));
 
-        // --- קטלוג חי ---
+        // קטלוג
         const mockupInput = document.getElementById('mockup-upload');
         const mockupDisplay = document.getElementById('mockup-display');
         const mockupPlaceholder = document.getElementById('mockup-placeholder');
 
-        function changeMockupStyle(newStyle) {
-            mockupDisplay.className = `mockup-item ${newStyle}`;
-        }
+        function changeMockupStyle(newStyle) { mockupDisplay.className = `mockup-item ${newStyle}`; }
 
         mockupInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -278,7 +279,7 @@
             }
         });
 
-        // --- העלאה סופית ---
+        // העלאה
         const fileInput = document.getElementById('file-upload'); 
         const filePreview = document.getElementById('file-preview'); 
         const submitBtn = document.getElementById('submit-btn');
@@ -287,6 +288,4 @@
             if (this.files && this.files.length > 0) { 
                 filePreview.innerHTML = `<i class='bx bxs-check-circle'></i> נבחר הקובץ: <b>${this.files[0].name}</b>`; 
                 filePreview.classList.remove('hidden'); 
-                submitBtn.classList.remove('bg-gray-300', 'text-gray-600', 'cursor-not-allowed'); 
-                submitBtn.classList.add('bg-gray-900', 'text-white', 'hover:bg-black', 'hover:-translate-y-1', 'shadow-2xl'); 
-                submitBtn.innerHTML = 'שלח להדפסה בוואטסאפ <i class=
+                submitBtn.classList.remove('b
