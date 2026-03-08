@@ -40,13 +40,6 @@
         /* === הגדרות בסיס === */
         body { background-color: #f8fafc; overflow-x: hidden; position: relative; }
 
-        /* === מסך פתיחה (Splash Screen) === */
-        #splash-screen { 
-            position: fixed; inset: 0; z-index: 99999; background-color: #000; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            transition: opacity 0.5s ease; 
-        }
-
         /* === מעקב עכבר (Cursor Blob) === */
         #cursor-follower {
             position: fixed; top: 0; left: 0; width: 500px; height: 500px; border-radius: 50%;
@@ -119,13 +112,6 @@
 <body class="font-sans">
 
     <div id="cursor-follower"></div>
-
-    <div id="splash-screen">
-        <video id="intro-video" src="opening.mp4" autoplay muted playsinline preload="auto" style="width: 100%; height: 100%; object-fit: cover;"></video>
-        <button onclick="forceRemoveSplash()" style="position: absolute; bottom: 40px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.5); padding: 10px 24px; border-radius: 50px; font-weight: bold; cursor: pointer; backdrop-filter: blur(10px); z-index: 100000; transition: all 0.3s ease;">
-            דלג לאתר <i class='bx bx-right-arrow-alt'></i>
-        </button>
-    </div>
 
     <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-md border-b-2 border-mega-cyan">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -310,22 +296,7 @@
         }
         animateCursor();
 
-        // === 2. וידוא הריגה למסך פתיחה (נגד תקיעות) ===
-        function forceRemoveSplash() {
-            const splash = document.getElementById('splash-screen');
-            if (splash) {
-                splash.style.opacity = '0';
-                splash.style.pointerEvents = 'none';
-                setTimeout(() => splash.remove(), 500);
-            }
-        }
-        document.addEventListener("DOMContentLoaded", function() {
-            setTimeout(forceRemoveSplash, 3000); // תמיד מוחק אחרי 3 שניות
-            const video = document.getElementById('intro-video');
-            if(video) { video.play().catch(() => forceRemoveSplash()); }
-        });
-
-        // === 3. אנימציות גלילה (Intersection Observer) ===
+        // === 2. אנימציות גלילה (Intersection Observer) ===
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const observer = new IntersectionObserver((entries) => { 
             entries.forEach(entry => { 
@@ -337,7 +308,7 @@
         }, observerOptions);
         document.querySelectorAll('.ppt-anim').forEach((el) => observer.observe(el));
 
-        // === 4. קטלוג חי (Mockup Editor) ===
+        // === 3. קטלוג חי (Mockup Editor) ===
         const mockupInput = document.getElementById('mockup-upload');
         const mockupDisplay = document.getElementById('mockup-display');
         const mockupPlaceholder = document.getElementById('mockup-placeholder');
@@ -356,7 +327,7 @@
             }
         });
 
-        // === 5. העלאה ושליחה לוואטסאפ ===
+        // === 4. העלאה ושליחה לוואטסאפ ===
         const fileInput = document.getElementById('file-upload'); 
         const filePreview = document.getElementById('file-preview'); 
         const submitBtn = document.getElementById('submit-btn');
